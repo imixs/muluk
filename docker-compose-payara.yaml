@@ -1,0 +1,24 @@
+version: "3.6"
+services:
+
+  
+  muluk-app:
+    image: rsoika/muluk-web-monitor:latest
+    environment:
+      TZ: "CET" 
+      LANG: "en_US.UTF-8"  
+      JAVA_OPTS: "-Dnashorn.args=--no-deprecation-warning"
+    ports:
+      - "8080:8080"
+      - "8787:8787"
+      - "9990:9990"
+    network_mode: bridge
+    volumes:
+      - ./docker/payara/deployments/autodeploy:/opt/payara/appserver/glassfish/domains/production/autodeploy
+      - ./docker/payara/deployments/applications:/opt/payara/appserver/glassfish/domains/production/applications
+      #- ./docker/deployments:/opt/payara/deployments
+
+
+#
+#      - ./docker/deployments:/opt/jboss/wildfly/standalone/deployments/
+

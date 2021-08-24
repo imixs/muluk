@@ -1,0 +1,12 @@
+version: "3.6"
+services:
+
+  muluk-app:
+    image: rsoika/muluk-web-monitor
+    environment:
+      TZ: "CET" 
+      LANG: "en_US.UTF-8"  
+    ports:
+      - "8080:8080"
+    network_mode: bridge
+

@@ -1,0 +1,136 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:i="http://xmlns.jcp.org/jsf/composite/imixs"
+	template="/layout/template.xhtml">
+
+	<ui:define name="content">
+
+
+		<div class="container-box">
+		
+			
+			
+			<div>
+				<div class="container-panel" style="">
+					<p>Cluster:</p>
+					<h2 class="">#{monitorController.getClusterSize()}/#{monitorController.getClusterSize()}
+						Monitors Up</h2>
+				</div>
+
+				<div class="container-panel"  style="">
+					<p>Watching:</p>
+					<h2>#{monitorController.objectsUp}/#{monitorController.objectsTotal} Objects Up</h2>
+				</div>
+
+			</div>
+
+
+			<div>
+			
+			<div class="container-panel" style="">
+					<p>Cluster Status:</p>
+					<h3 class="green">Availability = <h:outputText value="#{monitorController.clusterAvailability}">
+							<f:convertNumber type="number" groupingUsed="true"
+								maxFractionDigits="4" minFractionDigits="1" />
+						</h:outputText> %</h3>
+					<h3 class="red">Total Errors = #{monitorController.config.clusterErrors}</h3>
+				</div>
+				
+				<div class="container-panel" style="">
+					<p>Object Status:</p>
+					<h3 class="green">
+						Availability =
+						<h:outputText value="#{monitorController.availability}">
+							<f:convertNumber type="number" groupingUsed="true"
+								maxFractionDigits="4" minFractionDigits="1" />
+						</h:outputText>
+						%
+					</h3>
+					<h3 class="red">Total Errors =
+						#{monitorController.config.objectErrors}</h3>
+				</div>
+
+				
+
+			</div>
+
+			<div style="flex-grow: 1;">
+				<div class="container-panel" style="min-height:250px;">
+					<p>Started: #{monitorController.started}</p>
+					<h2 class="green">Up Time: #{monitorController.uptime}</h2>
+				
+					<table id="imixsdatatable" class="imixsdatatable"
+						style="width: 100%;">
+						<thead>
+							<tr>
+								<th>Cluster Nodes</th>
+								<th>Status</th>
+								<th>Last Success</th>
+								<th>Last Failure</th>
+							</tr>
+						</thead>
+						<tbody>
+							<ui:param name="objects"
+								value="#{monitorController.clusterNodes}"></ui:param>
+
+							<ui:repeat var="obj" value="#{objects}">
+								<tr style="#{'OK' eq obj.status?'':'color:red;'}">
+									<td>#{obj.getTarget()}</td>
+									<td>#{obj.status}</td>
+									<td>#{obj.lastSuccess}</td>
+									<td>#{obj.lastFailure}</td>
+								</tr>
+							</ui:repeat>
+						</tbody>
+					</table>
+
+				</div>
+			</div>
+
+
+		</div>
+
+
+
+		<div class="container-box">
+			
+
+			<div class="container-panel" style="width: 100%;">
+				<table id="imixsdatatable" class="imixsdatatable"
+					style="width: 100%;">
+					<thead>
+						<tr>
+							<th>Target</th>
+							<th>Type</th>
+							<th>Interval</th>
+							<th>Pattern</th>
+							<th>Status</th>
+							<th>Last Success</th>
+							<th>Last Failure</th>
+						</tr>
+					</thead>
+					<tbody>
+						<ui:param name="objects" value="#{monitorController.objects}"></ui:param>
+
+						<ui:repeat var="obj" value="#{objects}">
+							<tr style="#{'OK' eq obj.status?'':'color:red;'}">
+								<td>#{obj.getTarget()}</td>
+								<td>#{obj.type}</td>
+								<td>#{obj.interval} sec</td>
+								<td>#{obj.getPattern()}</td>
+								<td>#{obj.status}</td>
+								<td>#{obj.lastSuccess}</td>
+								<td>#{obj.lastFailure}</td>
+							</tr>
+						</ui:repeat>
+					</tbody>
+				</table>
+
+			</div>
+
+		</div>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,20 @@
+version: "3.6"
+services:
+
+  
+  muluk-app:
+    image: rsoika/muluk-web-monitor:latest
+    environment:
+      TZ: "CET" 
+      LANG: "en_US.UTF-8"  
+      JAVA_OPTS: "-Dnashorn.args=--no-deprecation-warning"
+      MULUK_CONFIG_FILE: "/opt/jboss/wildfly/config.xml"
+    ports:
+      - "8080:8080"
+      - "8787:8787"
+      - "9990:9990"
+    network_mode: bridge
+    volumes:
+      - ./docker/deployments:/opt/jboss/wildfly/standalone/deployments/
+      - ./docker/configuration/config.xml:/opt/jboss/wildfly/config.xml
+

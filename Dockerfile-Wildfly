@@ -1,0 +1,11 @@
+FROM jboss/wildfly:20.0.1.Final
+
+LABEL description="Imixs-Muluk"
+LABEL maintainer="ralph.soika@imixs.com"
+
+
+# Deploy artefact
+ADD ./target/*.war /opt/jboss/wildfly/standalone/deployments/
+
+# Run in Debug Mode
+CMD ["/opt/jboss/wildfly/bin/standalone.sh", "-b", "0.0.0.0", "-bmanagement", "0.0.0.0", "--debug", "*:8787"]

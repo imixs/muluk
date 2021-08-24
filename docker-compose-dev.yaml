@@ -7,7 +7,6 @@ services:
     environment:
       TZ: "CET" 
       LANG: "en_US.UTF-8"  
-      JAVA_OPTS: "-Dnashorn.args=--no-deprecation-warning"
       MULUK_CONFIG_FILE: "/opt/jboss/wildfly/config.xml"
     ports:
       - "8080:8080"

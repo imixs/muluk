@@ -37,3 +37,38 @@ All you need is a configuration file defining the targets to monitor.
           </target>
        </targets>
     </muluk-def>
+
+    
+    
+# Development
+
+The Imixs-Muluk project is open source and you are invited to join the development on [Github](https://github.com/imixs/muluk). If you have questions please use the [Discussion Forum](https://github.com/imixs/muluk/discussions).
+
+Muluk is a Maven Project developed in Java and based on Jakarta EE. We use Docker to provide a single container to run the tool.
+
+## How To Build
+
+To build from sources run:
+
+	$ docker build -t imixs/muluk ./
+	
+to start the container run:
+
+
+	$ docker run --env VARIABLE1=foobar imixs/muluk:latest 
+		
+
+## Local Development
+
+During development you can build a dev version providing debugging mode. To build the dev version run:
+
+	docker build -f Dockerfile-Dev -t imixs/muluk ./
+
+to start the container in dev mode run:
+
+
+	$ docker run --env MULUK_CONFIG_FILE="/opt/jboss/wildfly/config.xml" imixs/muluk:latest 
+		
+MULUK_CONFIG_FILE: 
+
+    

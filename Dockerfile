@@ -1,7 +1,8 @@
-FROM payara/micro:latest
-#FROM payara/micro:5.194
+FROM jboss/wildfly:20.0.1.Final
 
-MAINTAINER ralph.soika@imixs.com
-# Deploy artefacts
-COPY ./target/*.war $DEPLOY_DIR
+LABEL description="Imixs-Muluk"
+LABEL maintainer="ralph.soika@imixs.com"
 
+
+# Deploy artefact
+ADD ./target/*.war /opt/jboss/wildfly/standalone/deployments/

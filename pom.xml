@@ -95,7 +95,7 @@
 										<exec executable="docker">
 											<arg value="build" />
 											<arg value="-f" />
-											<arg value="Dockerfile-Wildfly" />
+											<arg value="Dockerfile-Dev" />
 											<arg value="-t" />
 											<arg value="imixs/muluk" />
 											<arg value="./" />

@@ -3,7 +3,7 @@ services:
 
   
   muluk-app:
-    image: rsoika/muluk-web-monitor:latest
+    image: rsoika/muluk:latest
     environment:
       TZ: "CET" 
       LANG: "en_US.UTF-8"  

@@ -3,11 +3,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.imixs.tools</groupId>
-	<artifactId>muluk-web-monitor</artifactId>
+	<artifactId>muluk</artifactId>
 	<packaging>war</packaging>
-	<name>muluk-web-monitor</name>
+	<name>Muluk-Web-Monitor</name>
 	<version>0.0.1</version>
-	<description>Muluk Web Service Monitor</description>
+	<description>Muluk Web Monitor</description>
 	<url>https://github.com/imixs/muluk</url>
 	<inceptionYear>2021</inceptionYear>
 	<developers>
@@ -62,7 +62,7 @@
 										<exec executable="docker">
 											<arg value="build" />
 											<arg value="-t" />
-											<arg value="imixs/muluk-web-monitor" />
+											<arg value="imixs/muluk" />
 											<arg value="./" />
 										</exec>
 									</target>
@@ -97,7 +97,7 @@
 											<arg value="-f" />
 											<arg value="Dockerfile-Wildfly" />
 											<arg value="-t" />
-											<arg value="imixs/muluk-web-monitor" />
+											<arg value="imixs/muluk" />
 											<arg value="./" />
 										</exec>
 
@@ -134,12 +134,12 @@
 										<exec executable="docker">
 											<arg value="build" />
 											<arg value="-t" />
-											<arg value="imixs/muluk-web-monitor" />
+											<arg value="imixs/muluk" />
 											<arg value="." />
 										</exec>
 										<exec executable="docker">
 											<arg value="push" />
-											<arg value="imixs/muluk-web-monitor" />
+											<arg value="imixs/muluk" />
 										</exec>
 									</target>
 								</configuration>
@@ -215,7 +215,7 @@
 
 		</plugins>
 
-		<finalName>muluk-web-monitor</finalName>
+		<finalName>muluk</finalName>
 
 		<!-- <testResources> <testResource> <directory>${project.basedir}/../src/workflow</directory> 
 			</testResource> </testResources> -->

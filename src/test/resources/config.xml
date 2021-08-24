@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema">
-	<cluster name="sepp">
+	<cluster name="Jackie Welles">
 		<node>
 			<label>0</label>
 		</node>

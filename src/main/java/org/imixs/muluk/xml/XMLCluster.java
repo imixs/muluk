@@ -28,6 +28,7 @@
 
 package org.imixs.muluk.xml;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -44,8 +45,17 @@ public class XMLCluster implements java.io.Serializable {
 	@XmlTransient
 	private static final long serialVersionUID = 1L;
 
-	
+	private String name;
 	private XMLObject[] node;
+
+	@XmlAttribute
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	public void setNode(XMLObject[] node) {
 		this.node = node;
@@ -54,7 +64,5 @@ public class XMLCluster implements java.io.Serializable {
 	public XMLObject[] getNode() {
 		return node;
 	}
-
-	
 
 }

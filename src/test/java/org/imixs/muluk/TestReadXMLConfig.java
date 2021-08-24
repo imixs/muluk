@@ -45,7 +45,7 @@ public class TestReadXMLConfig {
 		XMLCluster cluster = conf.getCluster();
 		Assert.assertNotNull(cluster);
 
-		Assert.assertEquals("sepp", cluster.getName());
+		Assert.assertEquals("Jackie Welles", cluster.getName());
 
 		Assert.assertTrue(cluster.getNode().length == 1);
 		// test values

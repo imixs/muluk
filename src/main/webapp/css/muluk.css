@@ -135,6 +135,7 @@ a.button {
 	width: 100%;
 	padding: 10px 30px 10px 210px;
 	text-align: right;
+ 	border-top: 1px solid #ccc;
 }
 
 #imixs-footer a {

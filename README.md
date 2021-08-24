@@ -1,9 +1,10 @@
 # Muluk-Monintor
 
-<img src="./doc/resources/MAYA-g-log-cal-D09-Muluk.png" />
+<img src="./doc/resources/logo.png" />
 
 Muluk is a super simple WebService Monitor. Muluk watches your web services and applications and informs you if something get wrong. It is independent form any other service, needs not database and no painful installation. You simply start with docker and one configuration file:
 
+<img src="./doc/resources/screen-01.png" /> 
 
 
 # How to Start
@@ -50,25 +51,39 @@ Muluk is a Maven Project developed in Java and based on Jakarta EE. We use Docke
 
 To build from sources run:
 
-	$ docker build -t imixs/muluk ./
-	
+	$ mvn clean install -Pdocker
+		
 to start the container run:
 
 
-	$ docker run --env VARIABLE1=foobar imixs/muluk:latest 
-		
+	$ docker run \
+	  -e TZ="CET" \
+	  -e MULUK_CONFIG_FILE="/opt/jboss/wildfly/config.xml" \
+	  -v $PWD/docker/configuration/config.xml:/opt/jboss/wildfly/config.xml \
+	  -p "8080:8080" \
+	  imixs/muluk:latest
+
+**Note:** The MULUK_CONFIG_FILE must point to your local config.xml file
 
 ## Local Development
 
 During development you can build a dev version providing debugging mode. To build the dev version run:
 
-	docker build -f Dockerfile-Dev -t imixs/muluk ./
+	$ mvn clean install -Pdebug
 
 to start the container in dev mode run:
 
 
-	$ docker run --env MULUK_CONFIG_FILE="/opt/jboss/wildfly/config.xml" imixs/muluk:latest 
+	$ docker run \
+	  -e TZ="CET" \
+	  -e MULUK_CONFIG_FILE="/opt/jboss/wildfly/config.xml" \
+	  -v $PWD/docker/deployments:/opt/jboss/wildfly/standalone/deployments/ \
+	  -v $PWD/docker/configuration/config.xml:/opt/jboss/wildfly/config.xml \
+	  -p "8080:8080" \
+	  -p "8787:8787" \
+	  imixs/muluk:latest
+	  
+	 
 		
-MULUK_CONFIG_FILE: 
 
     

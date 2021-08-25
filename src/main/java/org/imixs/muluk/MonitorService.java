@@ -99,12 +99,8 @@ public class MonitorService {
 		started = new Date(System.currentTimeMillis());
 
 		// created with linux figlet
-		logService.info(" __  __       _       _    ");
-		logService.info("|  \\/  |_   _| |_   _| | __");
-		logService.info("| |\\/| | | | | | | | | |/ /");
-		logService.info("| |  | | |_| | | |_| |   < ");
-		logService.info("|_|  |_|\\__,_|_|\\__,_|_|\\_\\   V0.0.1");
-
+		logService.logHeader();
+		
 		// load Config from file
 		logService.info("......read configuration...");
 		try {
@@ -114,6 +110,7 @@ public class MonitorService {
 			logService.severe("Failed to read config file: " + e.getMessage());
 		}
 
+		logService.info("......Cluster: " + config.getCluster().getName());
 		// cancel all timers...
 		for (Object obj : timerService.getTimers()) {
 			logService.warning("... cancel existing timer - should not happen!");
@@ -140,6 +137,7 @@ public class MonitorService {
 		}
 
 	}
+
 
 	/**
 	 * Returns the service startup time

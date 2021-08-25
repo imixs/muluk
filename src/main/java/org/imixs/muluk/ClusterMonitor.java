@@ -34,6 +34,7 @@ import java.text.ParseException;
 import java.util.Date;
 
 import javax.annotation.Resource;
+import javax.ejb.ScheduleExpression;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.ejb.Timeout;
@@ -55,7 +56,7 @@ import org.imixs.muluk.xml.XMLObject;
 @Startup
 @Singleton
 public class ClusterMonitor {
-	
+
 	@Inject
 	LogService logService;
 
@@ -66,9 +67,14 @@ public class ClusterMonitor {
 
 	/**
 	 * This method starts all jobs defined in the current monitor configuration.
+	 * <p>
+	 * In addition the method also starts a scheduled timer for the daily message
+	 * based on the overall configuration.
 	 */
 	public void start(XMLConfig config) {
 		this.config = config;
+
+		// first we start for each cluster object a separate timer
 		XMLObject[] allObjects = config.getCluster().getNode();
 		if (allObjects != null) {
 			for (XMLObject obj : allObjects) {
@@ -80,6 +86,10 @@ public class ClusterMonitor {
 				}
 			}
 		}
+
+		// finally we start a scheduled timer for the whole object. This timer is used
+		// for the daily message.
+		initDailyTimer();
 	}
 
 	/**
@@ -117,9 +127,31 @@ public class ClusterMonitor {
 	}
 
 	/**
+	 * Starts a daily timer running on a fixed time every day.
+	 * 
+	 * @param config
+	 */
+	protected void initDailyTimer() {
+		TimerConfig timerConfig = new TimerConfig();
+		timerConfig.setInfo("DAILY_MESSAGE");
+		timerConfig.setPersistent(false);
+
+		ScheduleExpression scheduerExpression = new ScheduleExpression();
+		scheduerExpression.minute("42");
+		scheduerExpression.hour(6);
+		Timer timer = timerService.createCalendarTimer(scheduerExpression, timerConfig);
+		if (timer == null) {
+			logService.warning("...failed to start new monitoring job!");
+		}
+	}
+
+	/**
 	 * This is the method which monitors the cluster node
 	 * <p>
 	 * We are just interested in HTTP result 200
+	 * <p>
+	 * The method also handles the scheduled daily timer which is sending an overall
+	 * report.
 	 * 
 	 * @param timer
 	 */
@@ -128,52 +160,112 @@ public class ClusterMonitor {
 
 		// reset message log
 		logService.reset();
-		XMLObject object = (XMLObject) timer.getInfo();
 
-		if (object == null) {
-			logService.severe("...invalid object configuration! Timer will be stopped...");
-			timer.cancel();
-			return;
-		}
+		/*
+		 * Verify cluster node object
+		 */
+		if (timer.getInfo() instanceof XMLObject) {
 
-		logService.info("......monitor cluster node - " + object.getTarget());
+			XMLObject object = (XMLObject) timer.getInfo();
 
-		String target = object.getTarget();
-		// just check http status
-		try {
-			WebClient webClient = new WebClient(object.getAuth());
-			@SuppressWarnings("unused")
-			String result = webClient.get(target);
+			if (object == null) {
+				logService.severe("...invalid object configuration! Timer will be stopped...");
+				timer.cancel();
+				return;
+			}
 
-			if (webClient.getLastHTTPResult() == 200) {
-				logService.info("......OK");
-				object.setStatus("OK");
-				object.setLastSuccess(new Date());
-				config.addClusterPing();
-			} else {
-				logService.info("......FAILED - pattern not found!");
+			logService.info("......monitor cluster node - " + object.getTarget());
+
+			String target = object.getTarget();
+			// just check http status
+			try {
+				WebClient webClient = new WebClient(object.getAuth());
+				@SuppressWarnings("unused")
+				String result = webClient.get(target);
+
+				if (webClient.getLastHTTPResult() == 200) {
+					logService.info("......OK");
+					object.setStatus("OK");
+					object.setLastSuccess(new Date());
+					config.addClusterPing();
+				} else {
+					logService.info("......FAILED - pattern not found!");
+					object.setStatus("FAILED");
+					object.setLastFailure(new Date());
+					config.addClusterErrors();
+				}
+			} catch (IOException e) {
+				logService.severe("FAILED to request target - " + e.getMessage());
 				object.setStatus("FAILED");
 				object.setLastFailure(new Date());
 				config.addClusterErrors();
 			}
-		} catch (IOException e) {
-			logService.severe("FAILED to request target - " + e.getMessage());
-			object.setStatus("FAILED");
-			object.setLastFailure(new Date());
-			config.addClusterErrors();
+
+			// if status has changed than we send an email....
+			if (!object.getStatus().equals(object.getLastStatus())) {
+				try {
+					if (MonitorService.STATUS_FAILED.equals(object.getStatus())) {
+						logService.sendMessageLog("[" + config.getCluster().getName() + "] We have a problem - Service DOWN: " + object.getTarget(),
+								config.getMail());
+					}
+					if (MonitorService.STATUS_OK.equals(object.getStatus())) {
+						logService.sendMessageLog("[" + config.getCluster().getName() + "] Problem solved - Service UP: " + object.getTarget(),
+								config.getMail());
+					}
+					object.setLastStatus(object.getStatus());
+				} catch (MessagingException e) {
+					logService.severe("Failed to send Status Mail - " + e.getMessage());
+					e.printStackTrace();
+				}
+			}
 		}
-		
-		// if status has changed than we send an email....
-		if (!object.getStatus().equals(object.getLastStatus())) {
+
+		/*
+		 * Daily Message
+		 */
+
+		if ("DAILY_MESSAGE".equals(timer.getInfo())) {
+
+			logService.logHeaderToMail();
+			
+			String overallStatus = MonitorService.STATUS_OK;
+
+			logService.info("Cluster: " + config.getCluster().getName());
+			logService.info("------------------------------------------");
+
+			for (XMLObject node : config.getCluster().getNode()) {
+				if (MonitorService.STATUS_OK.equals(node.getStatus())) {
+					logService.info(node.getStatus() + " \t " + node.getLastSuccess() + "\t" + node.getTarget());
+				} else {
+					overallStatus = MonitorService.STATUS_FAILED;
+					logService.info(node.getStatus() + " \t " + node.getLastFailure() + "\t" + node.getTarget());
+				}
+			}
+			logService.info("");
+			logService.info("Objects: ");
+			logService.info("------------------------------------------");
+			for (XMLObject node : config.getMonitor().getObject()) {
+				if (MonitorService.STATUS_OK.equals(node.getStatus())) {
+					logService.info(node.getStatus() + " \t " + node.getLastSuccess() + "\t" + node.getTarget());
+				} else {
+					overallStatus = MonitorService.STATUS_FAILED;
+					logService.info(node.getStatus() + " \t " + node.getLastFailure() + "\t" + node.getTarget());
+				}
+			}
+
+			// send an email....
 			try {
-				if (MonitorService.STATUS_FAILED.equals(object.getStatus())) {
-					logService.sendMessageLog("We have a problem - Service DOWN: " + object.getTarget(),
+				if (MonitorService.STATUS_OK.equals(overallStatus)) {
+					logService.sendMessageLog(
+							"[" + config.getCluster().getName() + "] Good Morning :-) - everything is up and running. ",
 							config.getMail());
+				} else {
+					logService.sendMessageLog(
+							"[" + config.getCluster().getName() + "] Good Morning :-/ - we have a problem! ",
+							config.getMail());
+
 				}
-				if (MonitorService.STATUS_OK.equals(object.getStatus())) {
-					logService.sendMessageLog("Problem solved - Service UP: " + object.getTarget(), config.getMail());
-				}
-				object.setLastStatus(object.getStatus());
+				
 			} catch (MessagingException e) {
 				logService.severe("Failed to send Status Mail - " + e.getMessage());
 				e.printStackTrace();

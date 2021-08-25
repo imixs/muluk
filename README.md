@@ -58,6 +58,7 @@ to start the container run:
 
 	$ docker run \
 	  -e TZ="CET" \
+	  -e LANG="en_US.UTF-8" \
 	  -e MULUK_CONFIG_FILE="/opt/jboss/wildfly/config.xml" \
 	  -v $PWD/docker/configuration/config.xml:/opt/jboss/wildfly/config.xml \
 	  -p "8080:8080" \
@@ -76,6 +77,7 @@ to start the container in dev mode run:
 
 	$ docker run \
 	  -e TZ="CET" \
+	  -e LANG="en_US.UTF-8" \
 	  -e MULUK_CONFIG_FILE="/opt/jboss/wildfly/config.xml" \
 	  -v $PWD/docker/deployments:/opt/jboss/wildfly/standalone/deployments/ \
 	  -v $PWD/docker/configuration/config.xml:/opt/jboss/wildfly/config.xml \

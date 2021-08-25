@@ -191,11 +191,11 @@ public class ObjectMonitor {
 		if (!object.getStatus().equals(object.getLastStatus())) {
 			try {
 				if (MonitorService.STATUS_FAILED.equals(object.getStatus())) {
-					logService.sendMessageLog("We have a problem - Service DOWN: " + object.getTarget(),
+					logService.sendMessageLog("[" + config.getCluster().getName() + "] We have a problem - Service DOWN: " + object.getTarget(),
 							config.getMail());
 				}
 				if (MonitorService.STATUS_OK.equals(object.getStatus())) {
-					logService.sendMessageLog("Problem solved - Service UP: " + object.getTarget(), config.getMail());
+					logService.sendMessageLog("[" + config.getCluster().getName() + "] Problem solved - Service UP: " + object.getTarget(), config.getMail());
 				}
 				object.setLastStatus(object.getStatus());
 			} catch (MessagingException e) {

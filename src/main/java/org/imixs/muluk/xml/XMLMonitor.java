@@ -28,7 +28,6 @@
 
 package org.imixs.muluk.xml;
 
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -47,17 +46,7 @@ public class XMLMonitor implements java.io.Serializable {
 
 	private XMLObject[] object;
 
-	private String name;
-
-	@XmlAttribute
-	public java.lang.String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
+	
 	public XMLMonitor() {
 		setObject(new XMLObject[] {});
 	}

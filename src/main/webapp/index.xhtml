@@ -11,54 +11,8 @@
 
 		<div class="container-box">
 		
-			
-			
-			<div>
-				<div class="container-panel" style="">
-					<p>Cluster:</p>
-					<h2 class="">#{monitorController.getClusterSize()}/#{monitorController.getClusterSize()}
-						Monitors Up</h2>
-				</div>
-
-				<div class="container-panel"  style="">
-					<p>Watching:</p>
-					<h2>#{monitorController.objectsUp}/#{monitorController.objectsTotal} Objects Up</h2>
-				</div>
-
-			</div>
-
-
-			<div>
-			
-			<div class="container-panel" style="">
-					<p>Cluster Status:</p>
-					<h3 class="green">Availability = <h:outputText value="#{monitorController.clusterAvailability}">
-							<f:convertNumber type="number" groupingUsed="true"
-								maxFractionDigits="4" minFractionDigits="1" />
-						</h:outputText> %</h3>
-					<h3 class="red">Total Errors = #{monitorController.config.clusterErrors}</h3>
-				</div>
-				
-				<div class="container-panel" style="">
-					<p>Object Status:</p>
-					<h3 class="green">
-						Availability =
-						<h:outputText value="#{monitorController.availability}">
-							<f:convertNumber type="number" groupingUsed="true"
-								maxFractionDigits="4" minFractionDigits="1" />
-						</h:outputText>
-						%
-					</h3>
-					<h3 class="red">Total Errors =
-						#{monitorController.config.objectErrors}</h3>
-				</div>
-
-				
-
-			</div>
-
 			<div style="flex-grow: 1;">
-				<div class="container-panel" style="min-height:250px;">
+				<div class="container-panel" style="min-height:300px;"  data-title="Cluster Monitor">
 					<p>Started: #{monitorController.started}</p>
 					<h2 class="green">Up Time: #{monitorController.uptime}</h2>
 				
@@ -89,6 +43,52 @@
 
 				</div>
 			</div>
+			
+			<div>
+				<div class="container-panel" data-title="Cluster" >
+					<p>Nodes Watching:</p>
+					<h2 class="">#{monitorController.getClusterSize()}/#{monitorController.getClusterSize()}
+						Monitors Up</h2>
+				</div>
+
+				<div class="container-panel"  data-title="Objects">
+					<p>Objects Watching:</p>
+					<h2>#{monitorController.objectsUp}/#{monitorController.objectsTotal} Objects Up</h2>
+				</div>
+
+			</div>
+
+
+			<div>
+			
+			<div class="container-panel"  data-title="Cluster Status">
+					<p>All Cluster Nodes:</p>
+					<h3 class="green">Availability = <h:outputText value="#{monitorController.clusterAvailability}">
+							<f:convertNumber type="number" groupingUsed="true"
+								maxFractionDigits="4" minFractionDigits="1" />
+						</h:outputText> %</h3>
+					<h3 class="red">Total Errors = #{monitorController.config.clusterErrors}</h3>
+				</div>
+				
+				<div class="container-panel"  data-title="Object Status">
+					<p>All Objects:</p>
+					<h3 class="green">
+						Availability =
+						<h:outputText value="#{monitorController.availability}">
+							<f:convertNumber type="number" groupingUsed="true"
+								maxFractionDigits="4" minFractionDigits="1" />
+						</h:outputText>
+						%
+					</h3>
+					<h3 class="red">Total Errors =
+						#{monitorController.config.objectErrors}</h3>
+				</div>
+
+				
+
+			</div>
+
+			
 
 
 		</div>
@@ -98,7 +98,7 @@
 		<div class="container-box">
 			
 
-			<div class="container-panel" style="width: 100%;">
+			<div class="container-panel" style="width: 100%;"  data-title="Object Monitor">
 				<table id="imixsdatatable" class="imixsdatatable"
 					style="width: 100%;">
 					<thead>

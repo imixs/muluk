@@ -130,7 +130,7 @@ public class MonitorService {
 		
 		
 		try {
-			logService.sendMessageLog("Muluk Monitor started", config.getMail());
+			logService.sendMessageLog("[" + config.getCluster().getName() + "] Muluk Monitor started", config.getMail());
 		} catch (MessagingException e) {
 			logger.severe("Failed to send mail: " + e.getMessage());
 			e.printStackTrace();

@@ -39,6 +39,16 @@ All you need is a configuration file defining the targets to monitor.
        </targets>
     </muluk-def>
 
+
+
+
+## Kubernetes
+
+To run Muluk in Kubernetes first create the config.xml file and put it into a config-map
+
+	$ kubectl create namespace muluk
+	$ kubectl create configmap muluk-config --from-file=./muluk/config.xml -n muluk
+
     
     
 # Development

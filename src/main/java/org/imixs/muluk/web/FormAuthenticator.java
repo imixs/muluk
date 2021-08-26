@@ -45,6 +45,8 @@ import java.util.logging.Logger;
 /**
  * This RequestFilter performs a form based authentication. The filter can be
  * used with a javax.ws.rs.client.Client.
+ * <p>
+ * The FormAuthenticator provides a feature to reuse existing jsession keys.
  * 
  * @author rsoika
  *
@@ -54,6 +56,18 @@ public class FormAuthenticator implements RequestFilter {
     private List<HttpCookie> cookies;
     private final String USER_AGENT = "Mozilla/5.0";
     private final static Logger logger = Logger.getLogger(FormAuthenticator.class.getName());
+
+    private String cookieString;
+
+    /**
+     * Try to reuse a cookie string...
+     * 
+     * @param cookieString
+     */
+    public FormAuthenticator(String cookieString) {
+        super();
+        this.cookieString = cookieString;
+    }
 
     public FormAuthenticator(String baseUri, String username, String password) {
         // extend the base uri with /j_security_check....
@@ -100,6 +114,15 @@ public class FormAuthenticator implements RequestFilter {
             }
             in.close();
 
+            // now we store the cookie values in a array list of strings....
+            if (cookies != null && cookies.size() > 0) {
+                String values = "";
+                for (HttpCookie acookie : cookies) {
+                    values = values + acookie + ",";
+                }
+                cookieString = values;
+            }
+
         } catch (IOException e) {
             // something went wrong...
             e.printStackTrace();
@@ -111,13 +134,21 @@ public class FormAuthenticator implements RequestFilter {
      * In the filter method we put the cookies form the login into the request.
      */
     public void filter(HttpURLConnection connection) throws IOException {
-        if (cookies != null && cookies.size() > 0) {
-            String values = "";
-            for (HttpCookie acookie : cookies) {
-                values = values + acookie + ",";
-            }
-            connection.setRequestProperty("Cookie", values);
+
+        if (cookieString != null && !cookieString.isEmpty()) {
+            connection.setRequestProperty("Cookie", cookieString);
         }
+//        if (cookies != null && cookies.size() > 0) {
+//            String values = "";
+//            for (HttpCookie acookie : cookies) {
+//                values = values + acookie + ",";
+//            }
+//            connection.setRequestProperty("Cookie", values);
+//        }
+    }
+
+    public String getCookieString() {
+        return cookieString;
     }
 
 }

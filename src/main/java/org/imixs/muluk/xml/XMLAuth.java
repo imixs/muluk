@@ -18,10 +18,13 @@ public class XMLAuth implements java.io.Serializable {
 	private String type;
 	private String user;
 	private String password;
+	private String token;
 
 	public XMLAuth() {
 		super();
 	}
+	
+	
 
 	@XmlAttribute
 	public void setType(String type) {
@@ -50,4 +53,16 @@ public class XMLAuth implements java.io.Serializable {
 		return password;
 	}
 
+
+	@XmlTransient
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	
+	
 }

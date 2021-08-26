@@ -77,6 +77,7 @@ body {
 	font-size: 0.85em;
 }
 
+
 .container-box h1 {
 	font-weight: bold;
 	font-size: 2em;
@@ -85,6 +86,11 @@ body {
 	color: #ffff99;
 	text-shadow: 0 0 0.4em yellow;
 	
+}
+
+.header h1 {
+	font-size: 3em;
+	line-height: 67px;
 }
 
 

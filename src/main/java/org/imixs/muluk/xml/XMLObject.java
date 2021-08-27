@@ -59,6 +59,9 @@ public class XMLObject implements java.io.Serializable {
 	 */
 	@XmlAttribute
 	public long getInterval() {
+	    if (interval<=0) {
+	        interval=MonitorService.DEFAULT_INTERVAL;
+	    }
 		return interval;
 	}
 

@@ -113,6 +113,10 @@ public class MonitorController implements Serializable {
 	public XMLConfig getConfig() {
 		return monitorService.getConfig();
 	}
+	
+	public String getName() {
+	    return monitorService.getConfig().getCluster().getName();
+	}
 
 	/**
 	 * Returns the objects.

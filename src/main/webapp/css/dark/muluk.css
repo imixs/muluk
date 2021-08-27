@@ -123,6 +123,8 @@ body {
 	box-shadow: inset 0 0 0.4em yellow, 0 0 0.4em yellow;
 }
 
+
+
 .container-panel:before {
 	border-left: 0.2em solid #ffff33;
 	border-right: 0.2em solid #ffff33;
@@ -133,6 +135,30 @@ body {
 .container-panel p {
 	color: #ffff99;
 }
+
+
+.container-panel.red {
+  border: 0.2em solid #ff3333;
+  box-shadow: inset 0 0 0.4em red, 0 0 0.4em red;
+}
+.container-panel.red:before {
+  border-left: 0.2em solid #ff3333;
+  border-right: 0.2em solid #ff3333;
+  color: #ff9999;
+  text-shadow: 0 0 0.4em red;
+}
+
+.container-panel.green {
+  border: 0.2em solid #64ff47;
+  box-shadow: inset 0 0 0.4em #39ff14, 0 0 0.4em #39ff14;
+}
+.container-panel.green:before {
+  border-left: 0.2em solid #64ff47;
+  border-right: 0.2em solid #64ff47;
+  color: #baffad;
+  text-shadow: 0 0 0.4em #39ff14;
+}
+
 
 .container-panel p {
 	font-weight: bold;

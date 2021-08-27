@@ -26,17 +26,22 @@ All you need is a configuration file defining the targets to monitor.
          <smtp>...</smtp>
        </mail>
        
-       
-       <targets>
-          <target type="http">
-            <source>http://xxxxx</source>
+		<monitor>
+			<object type="web" >
+				<target>https://www.imixs.org</target>
+				<pattern>Imixs-Workflow supports the BPMN 2.0 standard</pattern>
+			</object>
+		
+			<object type="web">
+				<target>https://foo.com/</target>
+				<pattern>my-data</pattern>
             <auth type="basic">
                <user>yyy</user>
                <password>xxx</password>
             </auth>
-            <expected>....regex...</expected>
-          </target>
-       </targets>
+			</object>
+		</monitor>
+	       
     </muluk-def>
 
 

@@ -34,36 +34,35 @@ Muluk is hosted on Docker-Hub. So you simply can start Muluk with Docker:
 All you need is a configuration file defining your cluster and the targets to monitor.    
 
 
-    <muluk-dev>
-		<cluster name="local-dev">
-			<node>
-				<target>http://localhost:8080</target>
-				<auth type="BASIC" user="admin" password="adminadmin" />
-			</node>
-		</cluster>
-		<!-- Enable this section to receive E-Mail notifications
-		<mail host="mail.foo.com" port="465" user="your-user" password="your-password" from="info@foo.com">
-			<recipients>info@foo.com</recipients>
-		</mail>
-		-->
-		
-		<!-- The Objects to Monitor -->
-       <monitor>
-			<object type="web" >
-				<target>https://www.imixs.org</target>
-				<pattern>Imixs-Workflow </pattern>
-			</object>
-			<object type="web">
-				<target>https://foo.com/</target>
-				<pattern>my-data</pattern>
-            <auth type="basic">
-               <user>yyy</user>
-               <password>xxx</password>
-            </auth>
-			</object>
-		</monitor>
-	       
-    </muluk-def>
+	<muluk-dev>
+	  <cluster name="local-dev">
+	    <node>
+	      <target>http://localhost:8080</target>
+	      <auth type="BASIC" user="admin" password="adminadmin" />
+	    </node>
+	  </cluster>
+	  <!-- Enable this section to receive E-Mail notifications
+	  <mail host="mail.foo.com" port="465" user="your-user" password="your-password" from="info@foo.com">
+	    <recipients>info@foo.com</recipients>
+	  </mail>
+	  -->
+			
+	  <!-- The Objects to Monitor -->
+	  <monitor>
+	    <object type="web" >
+	      <target>https://www.imixs.org</target>
+	      <pattern>Imixs-Workflow </pattern>
+	    </object>
+	    <object type="web">
+	      <target>https://foo.com/</target>
+	      <pattern>my-data</pattern>
+	      <auth type="basic">
+	        <user>yyy</user>
+	        <password>xxx</password>
+	      </auth>
+	    </object>
+	  </monitor>	       
+	</muluk-def>
     
     
 ### The Object Configuration
@@ -93,7 +92,7 @@ Each object to be monitored is defined by an Object Configuraiton inside the *co
 Muluk is automatically sending notifications and alerts via E-Mail if one of your services or monitors goes down. You can define the mail server in the *config.xml* file in the section <mail>
 
 	<mail host="mail.foo.com" port="465" user="your-user" password="your-password" from="info@foo.com">
-			<recipients>info@foo.com,admin@foo.com</recipients>
+	   <recipients>info@foo.com,admin@foo.com</recipients>
 	</mail>
 
 | Element     | Description                                             |

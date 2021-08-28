@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	
+	
+	<cluster name="local-dev">
+		<node>
+			<target>http://localhost:8080</target>
+			<auth type="BASIC" user="admin" password="adminadmin" />
+		</node>
+	</cluster>
+	
+	<!-- 
+		The Mail Configuration is used to send out mails. Define your login data for your SMPT mail sever here.
+	 -->
+	 <!-- Enable this section to receive E-Mail notifications
+	<mail host="mail.foo.com" port="465" user="your-user" password="your-password" from="info@foo.com">
+		<recipients>info@foo.com</recipients>
+	</mail>
+	 -->
+	
+	<monitor>
+		<object type="web" interval="35">
+			<target>https://www.imixs.org</target>
+			<pattern>Imixs-Workflow supports the BPMN 2.0 standard</pattern>
+		</object>
+		<object type="web" interval="55">
+			<target>https://manik.imixs.org/</target>
+			<pattern>Manik Hot-Deploy</pattern>
+		</object>
+	</monitor>
+</config>

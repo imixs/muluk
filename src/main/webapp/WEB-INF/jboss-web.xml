@@ -3,5 +3,8 @@
 
 	<default-encoding>UTF-8</default-encoding>
 	<context-root>/</context-root>
-
+	<security-domain>imixsrealm</security-domain>
+	
 </jboss-web>
+
+

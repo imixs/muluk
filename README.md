@@ -9,11 +9,15 @@ Muluk is a super simple WebService Monitor. Muluk watches your web services and 
 
 # How to Start
 
-Muluk is hosted on Docker-Hub. So you simply need Docker to run Muluk as a Web Service on any kind of server within you private network or in the itnernet. 
+Muluk is hosted on Docker-Hub. So you simply need Docker to run Muluk as a Web Service on any kind of server within you private network or in the Internet. 
 
- 
+	$ docker run \
+	  -e TZ="CET" \
+	  -e LANG="en_US.UTF-8" \
+	  -v $PWD/config.xml:/opt/jboss/config.xml \
+	  -p "8080:8080" \
+	  imixs/muluk:latest
 
-    docker run....
 
 ## The Configuration
 
@@ -21,7 +25,13 @@ All you need is a configuration file defining the targets to monitor.
 
 
     <muluk-dev>
-    
+		<cluster name="local-dev">
+			<node>
+				<target>http://localhost:8080</target>
+				<auth type="BASIC" user="admin" password="adminadmin" />
+			</node>
+		</cluster>
+		
        <mail>
          <smtp>...</smtp>
        </mail>
@@ -31,7 +41,6 @@ All you need is a configuration file defining the targets to monitor.
 				<target>https://www.imixs.org</target>
 				<pattern>Imixs-Workflow supports the BPMN 2.0 standard</pattern>
 			</object>
-		
 			<object type="web">
 				<target>https://foo.com/</target>
 				<pattern>my-data</pattern>
@@ -45,7 +54,20 @@ All you need is a configuration file defining the targets to monitor.
     </muluk-def>
 
 
+### Security
 
+The Web interface is protected with a BASIC authentication security realm. You can use the default user 'admin' with the default password 'adminadmin'.
+
+To change the user/password you simply need to create/edit the files '*muluk-users.properties*' and '*muluk-roles.properties*' and map these files into your docker container.
+
+	$ docker run \
+	  -e TZ="CET" \
+	  -e LANG="en_US.UTF-8" \
+	  -v $PWD/config.xml:/opt/jboss/config.xml \
+	  -v $PWD/muluk-users.properties:/opt/jboss/wildfly/standalone/configuration/muluk-users.properties \
+	  -v $PWD/muluk-roles.properties:/opt/jboss/wildfly/standalone/configuration/muluk-roles.properties \
+	  -p "8080:8080" \
+	  imixs/muluk:latest
 
 ## Kubernetes
 
@@ -74,7 +96,6 @@ to start the container run:
 	$ docker run \
 	  -e TZ="CET" \
 	  -e LANG="en_US.UTF-8" \
-	  -e MULUK_CONFIG_FILE="/opt/jboss/wildfly/config.xml" \
 	  -v $PWD/docker/configuration/config.xml:/opt/jboss/wildfly/config.xml \
 	  -p "8080:8080" \
 	  imixs/muluk:latest
@@ -93,7 +114,6 @@ to start the container in dev mode run:
 	$ docker run \
 	  -e TZ="CET" \
 	  -e LANG="en_US.UTF-8" \
-	  -e MULUK_CONFIG_FILE="/opt/jboss/wildfly/config.xml" \
 	  -v $PWD/docker/deployments:/opt/jboss/wildfly/standalone/deployments/ \
 	  -v $PWD/docker/configuration/config.xml:/opt/jboss/wildfly/config.xml \
 	  -p "8080:8080" \

@@ -3,14 +3,30 @@
 	xmlns="http://java.sun.com/xml/ns/javaee"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	version="3.0">
-	<display-name>Imixs Admin Client</display-name>
+	<display-name>Imixs Muluk Web Monitor</display-name>
 	<welcome-file-list>
-<!-- 		<welcome-file>index.html</welcome-file> -->
 		<welcome-file>index.xhtml</welcome-file>
 	</welcome-file-list>
-	
-		<context-param>
+	<context-param>
 		<param-name>javax.faces.PROJECT_STAGE</param-name>
 		<param-value>Development</param-value>
 	</context-param>
+
+	<!-- Basic authentication -->
+	<login-config>
+		<auth-method>BASIC</auth-method>
+		<realm-name>imixsrealm</realm-name>
+	</login-config>
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>restricted</web-resource-name>
+			<url-pattern>/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>org.imixs.ACCESSLEVEL.READERACCESS</role-name>
+		</auth-constraint>
+	</security-constraint>
+	<security-role>
+		<role-name>org.imixs.ACCESSLEVEL.READERACCESS</role-name>
+	</security-role>
 </web-app>

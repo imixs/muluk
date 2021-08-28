@@ -179,9 +179,12 @@ body {
 
 #imixs-footer {
 	width: 100%;
+	margin-top:50px;
 	padding: 10px 30px 10px 210px;
 	text-align: right;
-	border-top: 1px solid #ccc;
+	border-top: 1px solid #999;
+	color: #999;
+	font-size:0.8em;
 }
 
 #imixs-footer a {

@@ -96,11 +96,22 @@ to start the container run:
 	$ docker run \
 	  -e TZ="CET" \
 	  -e LANG="en_US.UTF-8" \
-	  -v $PWD/docker/configuration/config.xml:/opt/jboss/wildfly/config.xml \
+	  -v $PWD/docker/configuration/config.xml:/opt/jboss/config.xml \
 	  -p "8080:8080" \
 	  imixs/muluk:latest
 
 **Note:** The MULUK_CONFIG_FILE must point to your local config.xml file
+
+
+
+
+## Rest API
+
+You can request the current config state with the Rest API endpoint:
+
+	http://localhos:8080/api/config
+	
+This will return the XML object including the latest monitoring data. 	
 
 ## Local Development
 
@@ -115,7 +126,7 @@ to start the container in dev mode run:
 	  -e TZ="CET" \
 	  -e LANG="en_US.UTF-8" \
 	  -v $PWD/docker/deployments:/opt/jboss/wildfly/standalone/deployments/ \
-	  -v $PWD/docker/configuration/config.xml:/opt/jboss/wildfly/config.xml \
+	  -v $PWD/docker/configuration/config.xml:/opt/jboss/config.xml \
 	  -p "8080:8080" \
 	  -p "8787:8787" \
 	  imixs/muluk:latest

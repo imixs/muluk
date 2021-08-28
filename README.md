@@ -3,11 +3,18 @@
 <img src="./doc/resources/logo.png" />
 
 Muluk is a super simple to use WebService Monitor. Muluk watches your web services and applications and notifies you if something went wrong. It is independent form any other service, needs no database and no painful installation. You simply start with docker and one single configuration file.
-Of course, you can run Muluk also in a cluster to ensure a high reliability of your monitoring solution.
+Of course, you can run Muluk also in a cluster to ensure a high reliability of your monitoring solution. 
 
-Muluk notifies you via E-Mail if one of your services goes down. In addition it provides Web front-end and a Rest API. 
+## Web Frontend 
+
+Muluk provides a Web front-end and a Rest API: 
 
 <img src="./doc/resources/screen-01.png" /> 
+
+
+## Notification & Alerting
+
+Muluk automatically notifies you via E-Mail if one of your services or monitors goes down. In addition Muluk sends out a daily morning E-Mail just to tell you that everything is fine. 
 
 
 # How to Start
@@ -74,11 +81,29 @@ Each object to be monitored is defined by an Object Configuraiton inside the *co
 
 | Element     | Description                                           | Example               |
 |-------------|-------------------------------------------------------|-----------------------|
-| **target**      | the URL to be monitored                               | https://www.foo.com   |
+| target      | the URL to be monitored                               | https://www.foo.com   |
 | pattern     | a string or a regular expression to test the content  | 'hello world'         |
 | auth        | optional authentication object. The type attribute defines the authentication method (basic,form,jwt)       | basic                 | 
 | user        | the UserId used for authentication (only for type 'basic' and 'form')   | my-userid             | 
 | password    | the password used for authentication or a valid jwt token            |                       | 
+
+
+### The Mail Configuration
+
+Muluk is automatically sending notifications and alerts via E-Mail if one of your services or monitors goes down. You can define the mail server in the *config.xml* file in the section <mail>
+
+	<mail host="mail.foo.com" port="465" user="your-user" password="your-password" from="info@foo.com">
+			<recipients>info@foo.com,admin@foo.com</recipients>
+	</mail>
+
+| Element     | Description                                             |
+|-------------|---------------------------------------------------------|
+| host        | host name of you mail sever                             |
+| port        | imap port (default 465)                                 |
+| user        | imap mail user for authentication                       |
+| password    | imap password for authentication                        |
+| recipients  | comma separated list of mail recipients                 |
+
 
 ## Security
 

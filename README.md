@@ -76,7 +76,7 @@ Each object to be monitored is defined by an Object Configuraiton inside the *co
 |-------------|-------------------------------------------------------|-----------------------|
 | target      | the URL to be monitored                               | https://www.foo.com   |
 | pattern     | a string or a regular expression to test the content  | 'hello world'         |
-| auth type   | optional authentication object (basic,form,jwt)       | basic                 | 
+| auth        | optional authentication object. The type attribute defines the authentication method (basic,form,jwt)       | basic                 | 
 | auth user   | userid for authentication (used for basic and form)   | my-userid             | 
 | auth password | password for authentication or jwt token            |                       | 
 

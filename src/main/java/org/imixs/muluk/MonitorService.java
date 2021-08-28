@@ -60,124 +60,124 @@ import org.imixs.muluk.xml.XMLObject;
 @Startup
 @Singleton
 public class MonitorService {
-	public static int DEFAULT_INTERVAL = 60;
-	public static int INITIAL_DELAY = 10000;
+    public static int DEFAULT_INTERVAL = 60;
+    public static int INITIAL_DELAY = 10000;
 
-	public static String STATUS_FAILED = "FAILED";
-	public static String STATUS_OK = "OK";
+    public static String STATUS_FAILED = "FAILED";
+    public static String STATUS_OK = "OK";
 
+    private static Logger logger = Logger.getLogger(MonitorService.class.getName());
 
-	private static Logger logger = Logger.getLogger(MonitorService.class.getName());
+    Date started = null;
 
-	Date started = null;
+    @Resource
+    javax.ejb.TimerService timerService;
 
-	@Resource
-	javax.ejb.TimerService timerService;
+    @Inject
+    ObjectMonitor objectMonitor;
 
-	@Inject
-	ObjectMonitor objectMonitor;
-	
-	@Inject
-	ClusterMonitor clusterMonitor;
-	
-	@Inject LogService logService;
+    @Inject
+    ClusterMonitor clusterMonitor;
 
-	@Inject
-	@ConfigProperty(name = "muluk.config.file", defaultValue = "config.xml")
-	String configFile;
+    @Inject
+    LogService logService;
 
-	XMLConfig config;
+    @Inject
+    @ConfigProperty(name = "muluk.config.file", defaultValue = "config.xml")
+    String configFile;
 
-	/**
-	 * This method start the system setup during deployment
-	 * 
-	 * @throws AccessDeniedException
-	 */
-	@PostConstruct
-	public void startup() {
+    XMLConfig config;
 
-		started = new Date(System.currentTimeMillis());
+    /**
+     * This method start the system setup during deployment
+     * 
+     * @throws AccessDeniedException
+     */
+    @PostConstruct
+    public void startup() {
 
-		// created with linux figlet
-		logService.logHeader();
-		
-		// load Config from file
-		logService.info("......read configuration...");
-		try {
-			byte[] bytes = Files.readAllBytes(Paths.get(configFile));
-			config = readConfig(bytes);
-		} catch (IOException | JAXBException e) {
-			logService.severe("Failed to read config file: " + e.getMessage());
-		}
+        started = new Date(System.currentTimeMillis());
 
-		logService.info("......Cluster: " + config.getCluster().getName());
-		// cancel all timers...
-		for (Object obj : timerService.getTimers()) {
-			logService.warning("... cancel existing timer - should not happen!");
-			Timer timer = (javax.ejb.Timer) obj;
-			if (timer != null) {
-				XMLObject object = (XMLObject) timer.getInfo();
-				logger.info("......cancel  timer - " + object.getTarget());
-				timer.cancel();
-			}
-		}
-		// Finally start optional schedulers
-		if (config != null) {
+        // created with linux figlet
+        logService.logHeader();
 
-			logService.info("......initalizing monitors...");
-			objectMonitor.start(config);
-			clusterMonitor.start(config);		}
-		
-		
-		try {
-			logService.sendMessageLog("[" + config.getCluster().getName() + "] Muluk Monitor started", config.getMail());
-		} catch (MessagingException e) {
-			logger.severe("Failed to send mail: " + e.getMessage());
-			e.printStackTrace();
-		}
+        // load Config from file
+        logger.finest("......read configuration...");
+        try {
+            byte[] bytes = Files.readAllBytes(Paths.get(configFile));
+            config = readConfig(bytes);
+        } catch (IOException | JAXBException e) {
+            logService.severe("Failed to read config file: " + e.getMessage());
+        }
 
-	}
+        logService.info("...Cluster: " + config.getCluster().getName());
+        // cancel all timers...
+        for (Object obj : timerService.getTimers()) {
+            logService.warning("... cancel existing timer - should not happen!");
+            Timer timer = (javax.ejb.Timer) obj;
+            if (timer != null) {
+                XMLObject object = (XMLObject) timer.getInfo();
+                logger.info("......cancel  timer - " + object.getTarget());
+                timer.cancel();
+            }
+        }
+        // Finally start optional schedulers
+        if (config != null) {
+            logService.info("...initalizing cluster...");
+            clusterMonitor.start(config);
+            logService.info("...initalizing monitors...");
+            objectMonitor.start(config);
+        }
 
+        try {
+            logService.sendMessageLog("[" + config.getCluster().getName() + "] Muluk Monitor started",
+                    config.getMail());
+        } catch (MessagingException e) {
+            logger.severe("Failed to send mail: " + e.getMessage());
+            e.printStackTrace();
+        }
 
-	/**
-	 * Returns the service startup time
-	 * 
-	 * @return
-	 */
-	public Date getStarted() {
-		return started;
-	}
+    }
 
-	/**
-	 * Returns the configuration object.
-	 * 
-	 * @return
-	 */
-	public XMLConfig getConfig() {
-		return config;
-	}
+    /**
+     * Returns the service startup time
+     * 
+     * @return
+     */
+    public Date getStarted() {
+        return started;
+    }
 
-	public static XMLConfig readConfig(byte[] byteInput) throws JAXBException, IOException {
+    /**
+     * Returns the configuration object.
+     * 
+     * @return
+     */
+    public XMLConfig getConfig() {
+        return config;
+    }
 
-		if (byteInput == null || byteInput.length == 0) {
-			return null;
-		}
+    public static XMLConfig readConfig(byte[] byteInput) throws JAXBException, IOException {
 
-		XMLConfig ecol = null;
+        if (byteInput == null || byteInput.length == 0) {
+            return null;
+        }
 
-		JAXBContext context = JAXBContext.newInstance(XMLConfig.class);
-		Unmarshaller m = context.createUnmarshaller();
+        XMLConfig ecol = null;
 
-		ByteArrayInputStream input = new ByteArrayInputStream(byteInput);
-		Object jaxbObject = m.unmarshal(input);
-		if (jaxbObject == null) {
-			throw new RuntimeException("readCollection error - wrong xml file format - unable to read content!");
-		}
+        JAXBContext context = JAXBContext.newInstance(XMLConfig.class);
+        Unmarshaller m = context.createUnmarshaller();
 
-		ecol = (XMLConfig) jaxbObject;
+        ByteArrayInputStream input = new ByteArrayInputStream(byteInput);
+        Object jaxbObject = m.unmarshal(input);
+        if (jaxbObject == null) {
+            throw new RuntimeException("readCollection error - wrong xml file format - unable to read content!");
+        }
 
-		return ecol;
+        ecol = (XMLConfig) jaxbObject;
 
-	}
+        return ecol;
+
+    }
 
 }

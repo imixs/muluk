@@ -2,14 +2,17 @@
 
 <img src="./doc/resources/logo.png" />
 
-Muluk is a super simple WebService Monitor. Muluk watches your web services and applications and informs you if something get wrong. It is independent form any other service, needs not database and no painful installation. You simply start with docker and one configuration file:
+Muluk is a super simple to use WebService Monitor. Muluk watches your web services and applications and notifies you if something went wrong. It is independent form any other service, needs no database and no painful installation. You simply start with docker and one single configuration file.
+Of course, you can run Muluk also in a cluster to ensure a high reliability of your monitoring solution.
+
+Muluk notifies you via E-Mail if one of your services goes down. In addition it provides Web front-end and a Rest API. 
 
 <img src="./doc/resources/screen-01.png" /> 
 
 
 # How to Start
 
-Muluk is hosted on Docker-Hub. So you simply need Docker to run Muluk as a Web Service on any kind of server within you private network or in the Internet. 
+Muluk is hosted on Docker-Hub. So you simply can start Muluk with Docker: 
 
 	$ docker run \
 	  -e TZ="CET" \
@@ -21,7 +24,7 @@ Muluk is hosted on Docker-Hub. So you simply need Docker to run Muluk as a Web S
 
 ## The Configuration
 
-All you need is a configuration file defining the targets to monitor.    
+All you need is a configuration file defining your cluster and the targets to monitor.    
 
 
     <muluk-dev>
@@ -31,15 +34,17 @@ All you need is a configuration file defining the targets to monitor.
 				<auth type="BASIC" user="admin" password="adminadmin" />
 			</node>
 		</cluster>
+		<!-- Enable this section to receive E-Mail notifications
+		<mail host="mail.foo.com" port="465" user="your-user" password="your-password" from="info@foo.com">
+			<recipients>info@foo.com</recipients>
+		</mail>
+		-->
 		
-       <mail>
-         <smtp>...</smtp>
-       </mail>
-       
-		<monitor>
+		<!-- The Objects to Monitor -->
+       <monitor>
 			<object type="web" >
 				<target>https://www.imixs.org</target>
-				<pattern>Imixs-Workflow supports the BPMN 2.0 standard</pattern>
+				<pattern>Imixs-Workflow </pattern>
 			</object>
 			<object type="web">
 				<target>https://foo.com/</target>
@@ -52,13 +57,36 @@ All you need is a configuration file defining the targets to monitor.
 		</monitor>
 	       
     </muluk-def>
+    
+    
+### The Object Configuration
 
+Each object to be monitored is defined by an Object Configuraiton inside the *config.xml* file. An Object defines the target URL and a pattern to match the content. Also you can define optional authentication settings to monitor secured web services and applications.
+
+	<object type="web">
+		<target>https://foo.com/</target>
+		<pattern>my-data</pattern>
+	    <auth type="basic">
+	       <user>yyy</user>
+	       <password>xxx</password>
+	    </auth>
+	</object>
+
+| Element     | Description                                           | Example               |
+|-------------|-------------------------------------------------------|-----------------------|
+| target      | the URL to be monitored                               | https://www.foo.com   |
+| pattern     | a string or a regular expression to test the content  | 'hello world'         |
+| auth type   | optional authentication object (basic|form|jwt)       | basic                 | 
+| auth user   | userid for authentication (used for basic|form)       | my-userid             | 
+| auth password | password for authentication or jwt token            |                       | 
 
 ## Security
 
 The Web interface is protected with a BASIC authentication security realm. You can use the default user 'admin' with the default password 'adminadmin'.
 
 To change the user/password you simply need to create/edit the files '*muluk-users.properties*' and '*muluk-roles.properties*' and map these files into your docker container.
+
+The files '*muluk-users.properties*' contains the user and password for authentication.
 
 	$ docker run \
 	  -e TZ="CET" \

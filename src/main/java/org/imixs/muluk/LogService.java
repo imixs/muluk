@@ -141,18 +141,18 @@ public class LogService {
 	 * @throws MessagingException
 	 * 
 	 */
-	public void sendMessageLog(String subject, XMLMail config) throws MessagingException {
+	public void sendMessageLog(String subject, XMLMail mailConfig) throws MessagingException {
 
-		if (config == null || config.getHost() == null || config.getHost().isEmpty()) {
+		if (mailConfig == null || mailConfig.getHost() == null || mailConfig.getHost().isEmpty()) {
 			return;
 		}
 		// Create a Properties object to contain connection configuration information.
 		Properties props = System.getProperties();
 		props.put("mail.transport.protocol", "smtp");
-		props.put("mail.smtps.port", config.getPort());
+		props.put("mail.smtps.port", mailConfig.getPort());
 		props.put("mail.smtps.starttls.enable", "true");
 
-		if (config.getPassword() != null && !config.getPassword().isEmpty()) {
+		if (mailConfig.getPassword() != null && !mailConfig.getPassword().isEmpty()) {
 			props.put("mail.smtps.auth", "true");
 		}
 
@@ -163,8 +163,8 @@ public class LogService {
 		// Create a message with the specified information.
 		MimeMessage msg = new MimeMessage(session);
 
-		msg.setFrom(new InternetAddress(config.getFrom()));
-		String[] receipients = config.getRecipients().split(",");
+		msg.setFrom(new InternetAddress(mailConfig.getFrom()));
+		String[] receipients = mailConfig.getRecipients().split(",");
 		List<InternetAddress> receipientAdresses = new ArrayList<InternetAddress>();
 		for (String adr : receipients) {
 			receipientAdresses.add(new InternetAddress(adr));
@@ -195,7 +195,7 @@ public class LogService {
 
 			// Connect to Amazon SES using the SMTP username and password you specified
 			// above.
-			transport.connect(config.getHost(), config.getUser(), config.getPassword());
+			transport.connect(mailConfig.getHost(), mailConfig.getUser(), mailConfig.getPassword());
 
 			// Send the email.
 			transport.sendMessage(msg, msg.getAllRecipients());

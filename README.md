@@ -7,9 +7,10 @@ Of course, you can run Muluk also in a cluster to ensure a high reliability of y
 
 ## Web Frontend 
 
-Muluk provides a Web front-end and a Rest API: 
+Muluk provides a Web front-end and a Rest API. The Web service is listening on port 8080. The default login data is: user='admin' password='adminadmin'
 
 <img src="./doc/resources/screen-01.png" /> 
+
 
 
 ## Notification & Alerting
@@ -70,12 +71,12 @@ All you need is a configuration file defining your cluster and the targets to mo
 Each object to be monitored is defined by an Object Configuraiton inside the *config.xml* file. An Object defines the target URL and a pattern to match the content. Also you can define optional authentication settings to monitor secured web services and applications.
 
 	<object type="web">
-		<target>https://foo.com/</target>
-		<pattern>my-data</pattern>
-	    <auth type="basic">
-	       <user>yyy</user>
-	       <password>xxx</password>
-	    </auth>
+	  <target>https://foo.com/</target>
+	  <pattern>my-data</pattern>
+	  <auth type="basic">
+	    <user>yyy</user>
+	    <password>xxx</password>
+	  </auth>
 	</object>
 
 | Element     | Description                                           | Example               |

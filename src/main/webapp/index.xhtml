@@ -29,7 +29,14 @@
 
 							<ui:repeat var="obj" value="#{objects}">
 								<tr style="#{'OK' eq obj.status?'':'color:red;'}">
-									<td>#{obj.getTarget()}</td>
+									<td>
+										<ui:fragment rendered="#{obj.getTarget().startsWith('http')}">
+											<a href="#{obj.getTarget()}" target="_blank">#{obj.getTarget()}</a>
+										</ui:fragment>
+										<ui:fragment rendered="#{!obj.getTarget().startsWith('http')}">
+											#{obj.getTarget()}
+										</ui:fragment>
+									</td>
 									<td>#{obj.status}</td>
 									<td>#{obj.lastSuccess}</td>
 									<td>#{obj.lastFailure}</td>
@@ -104,7 +111,14 @@
 
 						<ui:repeat var="obj" value="#{objects}">
 							<tr style="#{'OK' eq obj.status?'':'color:red;'}">
-								<td>#{obj.getTarget()}</td>
+								<td>
+									<ui:fragment rendered="#{obj.getTarget().startsWith('http')}">
+										<a href="#{obj.getTarget()}" target="_blank">#{obj.getTarget()}</a>
+									</ui:fragment>
+									<ui:fragment rendered="#{!obj.getTarget().startsWith('http')}">
+										#{obj.getTarget()}
+									</ui:fragment>
+								</td>
 								<td>#{obj.type}</td>
 								<td>#{obj.interval} sec</td>
 								<td>#{obj.getPattern()}</td>

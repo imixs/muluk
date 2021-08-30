@@ -137,8 +137,19 @@ public class WebClient {
                 authFilter = new BasicAuthenticator(xmlAuth.getUser(), xmlAuth.getPassword());
             }
             if ("FORM".equalsIgnoreCase(xmlAuth.getType())) {
-                // we try to rsue existing jsession key.
+                // we try to reuse existing jsession key.
                 String jsessionKey = xmlAuth.getToken();
+                long tokenCreationTime=xmlAuth.getTokenCreationTime();
+                int tokenTimeout=xmlAuth.getTokenCacheTimeout();
+                
+                // test if we can reuse the token or if a tokenTimeout is reached.
+                if (jsessionKey != null && !jsessionKey.isEmpty()
+                        && tokenCreationTime>0 && System.currentTimeMillis()-tokenCreationTime>tokenTimeout*1000) {
+                    // Token Timeout! -> invalidate token
+                    jsessionKey=null;
+                    xmlAuth.setToken(jsessionKey);
+                    logger.info("invalidate session token after " + ((System.currentTimeMillis()-tokenCreationTime)/1000) +" seconds");
+                }
 
                 if (jsessionKey != null && !jsessionKey.isEmpty()) {
                     // reuse cookie
@@ -157,6 +168,8 @@ public class WebClient {
 
                     // store cookie
                     xmlAuth.setToken(((FormAuthenticator) authFilter).getCookieString());
+                    // store token timeout
+                    xmlAuth.setTokenCreationTime(System.currentTimeMillis());
                 }
             }
             if ("JWT".equalsIgnoreCase(xmlAuth.getType())) {

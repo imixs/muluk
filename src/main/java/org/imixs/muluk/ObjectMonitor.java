@@ -167,7 +167,7 @@ public class ObjectMonitor {
                             logService.info("=== Page Content End ===");
                             object.setStatus(MonitorService.STATUS_FAILED);
                             object.setLastFailure(new Date());
-                            config.addObjectErrors();
+                            config.addObjectErrors();                          
                         }
                     } else {
                         // just http response 200
@@ -180,7 +180,7 @@ public class ObjectMonitor {
                     logService.info("......FAILED - target not responding!");
                     object.setStatus(MonitorService.STATUS_FAILED);
                     object.setLastFailure(new Date());
-                    config.addObjectErrors();
+                    config.addObjectErrors();               
                 }
 
             } catch (IOException e) {
@@ -191,17 +191,21 @@ public class ObjectMonitor {
             }
 
         }
+        
+        // if status failed invalidate the token for form based auth method
+        if (MonitorService.STATUS_FAILED.equals(object.getStatus())) {
+            // invalidate the cached token in case of a form based authentication!
+            if ("FORM".equalsIgnoreCase(object.getAuth().getType())) {
+                object.getAuth().setToken(null);
+            }
+        }
 
         // if status has changed than we send an email....
         if (!object.getStatus().equals(object.getLastStatus())) {
             try {
                 if (MonitorService.STATUS_FAILED.equals(object.getStatus())) {
                     logService.sendMessageLog("[" + config.getCluster().getName()
-                            + "] We have a problem - Service DOWN: " + object.getTarget(), config.getMail());
-                    // invalidate the cached token in case of a form based authentication!
-                    if ("FORM".equalsIgnoreCase(object.getAuth().getType())) {
-                        object.getAuth().setToken(null);
-                    }
+                            + "] We have a problem - Service DOWN: " + object.getTarget(), config.getMail());                  
                 }
                 if (MonitorService.STATUS_OK.equals(object.getStatus())) {
                     logService.sendMessageLog("[" + config.getCluster().getName() + "] Problem solved - Service UP: "

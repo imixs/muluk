@@ -159,7 +159,12 @@ public class ObjectMonitor {
                             config.addObjectPing();
 
                         } else {
-                            logService.info("......FAILED - pattern not found!");
+                            logService.info("......FAILED - HTTP response did not match the pattern: '" + object.getPattern());
+                            // log page content
+                            logService.info("");
+                            logService.info("=== Page Content Start ===");
+                            logService.info(result);
+                            logService.info("=== Page Content End ===");
                             object.setStatus(MonitorService.STATUS_FAILED);
                             object.setLastFailure(new Date());
                             config.addObjectErrors();

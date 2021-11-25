@@ -102,7 +102,8 @@ public class WebClient {
             return readResponse(urlConnection);
         } else {
             // if result 401
-            if (iLastHTTPResult == 401 && "FORM".equalsIgnoreCase(xmlAuth.getType()) && xmlAuth.getToken() != null) {
+            //if (iLastHTTPResult == 401 && "FORM".equalsIgnoreCase(xmlAuth.getType()) && xmlAuth.getToken() != null) {
+            if ("FORM".equalsIgnoreCase(xmlAuth.getType()) && xmlAuth.getToken() != null) {
                 // try once again with new cookie!
                 xmlAuth.setToken(null);
                 // and try it once again...

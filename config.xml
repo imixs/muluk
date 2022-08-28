@@ -28,5 +28,12 @@
 			<target>https://manik.imixs.org/</target>
 			<pattern>Manik Hot-Deploy</pattern>
 		</object>
+		
+		
+		<object type="web" interval="55">
+			<target>https://manik.imixs.org/</target>
+			<pattern>Manik Hot-Deploy</pattern>
+			<auth type="COOKIE" token="JSESSIONID=xxxxxxxx" />
+		</object>
 	</monitor>
 </config>

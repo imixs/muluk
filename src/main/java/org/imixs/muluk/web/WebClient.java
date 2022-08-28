@@ -176,6 +176,9 @@ public class WebClient {
             if ("JWT".equalsIgnoreCase(xmlAuth.getType())) {
                 authFilter = new JWTAuthenticator(xmlAuth.getPassword());
             }
+            if ("COOKIE".equalsIgnoreCase(xmlAuth.getType())) {
+                authFilter = new CookieAuthenticator( xmlAuth.getToken());
+            }            
 
             if (authFilter != null) {
                 authFilter.filter(urlConnection);
